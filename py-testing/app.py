@@ -3,11 +3,11 @@ import os
 
 import aws_cdk as cdk
 
-from py_testing.py_testing_stack import PyTestingStack
+from py_testing.py_testing_stack import PySimpleStack
 
 
 app = cdk.App()
-PyTestingStack(app, "PyTestingStack",
+PySimpleStack(app, "PySimpleStack",
 
                )
 
