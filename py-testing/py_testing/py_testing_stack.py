@@ -3,13 +3,14 @@ from aws_cdk import (
     Stack,
     aws_lambda,
     aws_s3 as s3,
+    RemovalPolicy
     # aws_sqs as sqs,
 )
 from constructs import Construct
 
 
-# class PyTestingStack(Stack):
-class PySimpleStack(Stack):
+class PyTestingStack(Stack):
+# class PySimpleStack(Stack):
 
     def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
@@ -25,7 +26,7 @@ class PySimpleStack(Stack):
             self,
             "SimpleBucket",
             versioned=True,
-            removal_policy=s3.RemovalPolicy.DESTROY
+            removal_policy=RemovalPolicy.DESTROY
         )
         
         bucket.grant_read(cool_lambda)
