@@ -15,13 +15,8 @@ def simple_template():
 
 
 def test_lambda_props(simple_template):
-    # app = core.App()
-    # stack = PySimpleStack(app, "py-testing")
-    # template = assertions.Template.from_stack(stack)
-
     simple_template.has_resource_properties("AWS::Lambda::Function", {
         "Runtime": "python3.11",
     })
 
-
- 
+    simple_template.resource_count_is("AWS::Lambda::Function", 1)
