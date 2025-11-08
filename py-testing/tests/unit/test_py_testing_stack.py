@@ -35,3 +35,28 @@ def test_lambda_runtime_with_matcher2(simple_template):
 
     # simple_template.resource_count_is("AWS::Lambda::Function", 1)
 
+
+
+def test_lambda_bucket_with_matchers(simple_template):
+    simple_template.has_resource_properties(
+        "AWS::IAM::Policy",
+        Match.object_like(
+            {
+                "PolicyDocument": {
+                    "Statement": [
+                        {
+                            "Resource": [
+                                {
+                                    "Fn::GetAtt": [
+                                        Match.string_like_regexp("SimpleBucket"),
+                                        "Arn",
+                                    ]
+                                },
+                                Match.any_value()
+                            ]
+                        }
+                    ]
+                }
+            }
+        ),
+    )
