@@ -92,4 +92,4 @@ def test_lambda_actions_with_captors(simple_template):
     assert set(lambda_action_captor.as_array()) == set(expected_actions)
 
 
-    assert "s3:GetObject" in expected_actions
+    assert "s3:GetObject*" in expected_actions
