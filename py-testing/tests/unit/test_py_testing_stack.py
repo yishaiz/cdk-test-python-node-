@@ -91,5 +91,18 @@ def test_lambda_actions_with_captors(simple_template):
 
     assert set(lambda_action_captor.as_array()) == set(expected_actions)
 
-
     assert "s3:GetObject*" in expected_actions
+
+
+# add a snapshot test to capture the bucket template
+def test_bucket_props_with_snapshot(simple_template, snapshot):
+    bucket_template = simple_template.find_resources("AWS::S3::Bucket")
+    
+    assert bucket_template == snapshot
+
+    # # Use snapshot testing to capture the bucket template
+    # snapshot = assertions.Match.object_like(bucket_template)
+
+    # # Here we would normally compare with a stored snapshot
+    # # For demonstration, we will just print it out
+    # print(snapshot)
