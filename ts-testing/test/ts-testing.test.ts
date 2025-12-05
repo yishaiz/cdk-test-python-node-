@@ -1,6 +1,7 @@
 import * as cdk from 'aws-cdk-lib';
 import * as TsTesting from '../lib/ts-testing-stack';
-import { Template } from 'aws-cdk-lib/assertions';
+import { Template, Match } from 'aws-cdk-lib/assertions';
+import { PolicyDocument } from 'aws-cdk-lib/aws-iam';
 
 describe('TsSimpleStack test suite', () => {
   let template: Template;
@@ -20,14 +21,29 @@ describe('TsSimpleStack test suite', () => {
     template.resourceCountIs('AWS::Lambda::Function', 1);
   });
 
-  // test('Lambda runtime check', () => {
-  //   template.hasResourceProperties('AWS::Lambda::Function', {
-  //     Runtime: 'nodejs18.x',
-  //   });
-  // });
-});
+  test('Lambda runtime check regex', () => {
+    template.hasResourceProperties('AWS::Lambda::Function', {
+      Runtime: Match.stringLikeRegexp('nodejs'),
+    });
+  });
 
-// code: Code.fromInline('console.log()'),
-//  "ZipFile": "console.log()"
-// },
-// "Handler": "index.handler",
+  test('Lambda bucket policy, with matchers', () => {
+    template.hasResourceProperties(
+      'AWS::IAM::Policy',
+      Match.objectLike({
+        PolicyDocument: {
+          Statement: [{
+              Resource: [{
+                  'Fn::GetAtt': [
+                    Match.stringLikeRegexp('SimpleBucket'),
+                    'Arn'
+                  ],
+                },
+                Match.anyValue()
+              ],
+            }],
+        },
+      })
+    );
+  });
+});
