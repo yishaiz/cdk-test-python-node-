@@ -1,17 +1,33 @@
-// import * as cdk from 'aws-cdk-lib';
-// import { Template } from 'aws-cdk-lib/assertions';
-// import * as TsTesting from '../lib/ts-testing-stack';
+import * as cdk from 'aws-cdk-lib';
+import * as TsTesting from '../lib/ts-testing-stack';
+import { Template } from 'aws-cdk-lib/assertions';
 
-// example test. To run these tests, uncomment this file along with the
-// example resource in lib/ts-testing-stack.ts
-test('SQS Queue Created', () => {
-//   const app = new cdk.App();
-//     // WHEN
-//   const stack = new TsTesting.TsTestingStack(app, 'MyTestStack');
-//     // THEN
-//   const template = Template.fromStack(stack);
+describe('TsSimpleStack test suite', () => {
+  let template: Template;
 
-//   template.hasResourceProperties('AWS::SQS::Queue', {
-//     VisibilityTimeout: 300
-//   });
+  beforeAll(() => {
+    const app = new cdk.App({
+      outdir: 'cdk.out/test',
+    });
+    const stack = new TsTesting.TsSimpleStack(app, 'MyTestStack');
+    template = Template.fromStack(stack);
+  });
+
+  test('Lambda runtime check', () => {
+    template.hasResourceProperties('AWS::Lambda::Function', {
+      Runtime: 'nodejs18.x',
+    });
+    template.resourceCountIs('AWS::Lambda::Function', 1);
+  });
+
+  // test('Lambda runtime check', () => {
+  //   template.hasResourceProperties('AWS::Lambda::Function', {
+  //     Runtime: 'nodejs18.x',
+  //   });
+  // });
 });
+
+// code: Code.fromInline('console.log()'),
+//  "ZipFile": "console.log()"
+// },
+// "Handler": "index.handler",
