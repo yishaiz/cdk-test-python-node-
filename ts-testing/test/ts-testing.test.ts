@@ -1,8 +1,6 @@
 import * as cdk from 'aws-cdk-lib';
 import * as TsTesting from '../lib/ts-testing-stack';
 import { Template, Match, Capture } from 'aws-cdk-lib/assertions';
-import { PolicyDocument } from 'aws-cdk-lib/aws-iam';
-// import { PolicyDocument } from 'aws-cdk-lib/aws-iam';
 
 describe('TsSimpleStack test suite', () => {
   let template: Template;
@@ -60,9 +58,15 @@ describe('TsSimpleStack test suite', () => {
         ],
       },
     });
+
+    const expectedActions = ['s3:GetObject*', 's3:GetBucket*', 's3:List*'];
+
+    expect(lambdaActionsCapture.asArray()).toEqual(expectedActions);
+  });
+
+  test('Bucket properties with snapshot', () => {
+    const bucketTemplate = template.findResources('AWS::S3::Bucket');
+
+    expect(bucketTemplate).toMatchSnapshot();
   });
 });
-
-//     template.hasResourceProperties('AWS::Lambda::Function', {
-//   Runtime: Match.stringLikeRegexp('nodejs'),
-// });
