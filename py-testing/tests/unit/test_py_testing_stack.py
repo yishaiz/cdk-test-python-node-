@@ -65,8 +65,8 @@ def test_lambda_bucket_with_matchers(simple_template):
     )
 
 
-def test_lambda_actions_with_captors(simple_template):
-    lambda_action_captor = Capture()
+def test_lambda_actions_with_captures(simple_template):
+    lambda_action_capture = Capture()
 
     simple_template.has_resource_properties(
         "AWS::IAM::Policy",
@@ -74,7 +74,7 @@ def test_lambda_actions_with_captors(simple_template):
             "PolicyDocument": {
                 "Statement": [
                     {
-                        "Action": lambda_action_captor,
+                        "Action": lambda_action_capture,
                     }
                 ]
             }
@@ -87,9 +87,9 @@ def test_lambda_actions_with_captors(simple_template):
         "s3:List*"
     ]
 
-    assert sorted(lambda_action_captor.as_array()) == sorted(expected_actions)
+    assert sorted(lambda_action_capture.as_array()) == sorted(expected_actions)
 
-    assert set(lambda_action_captor.as_array()) == set(expected_actions)
+    assert set(lambda_action_capture.as_array()) == set(expected_actions)
 
     assert "s3:GetObject*" in expected_actions
 

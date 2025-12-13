@@ -1,7 +1,8 @@
 import * as cdk from 'aws-cdk-lib';
 import * as TsTesting from '../lib/ts-testing-stack';
-import { Template, Match } from 'aws-cdk-lib/assertions';
+import { Template, Match, Capture } from 'aws-cdk-lib/assertions';
 import { PolicyDocument } from 'aws-cdk-lib/aws-iam';
+// import { PolicyDocument } from 'aws-cdk-lib/aws-iam';
 
 describe('TsSimpleStack test suite', () => {
   let template: Template;
@@ -32,18 +33,36 @@ describe('TsSimpleStack test suite', () => {
       'AWS::IAM::Policy',
       Match.objectLike({
         PolicyDocument: {
-          Statement: [{
-              Resource: [{
-                  'Fn::GetAtt': [
-                    Match.stringLikeRegexp('SimpleBucket'),
-                    'Arn'
-                  ],
+          Statement: [
+            {
+              Resource: [
+                {
+                  'Fn::GetAtt': [Match.stringLikeRegexp('SimpleBucket'), 'Arn'],
                 },
-                Match.anyValue()
+                Match.anyValue(),
               ],
-            }],
+            },
+          ],
         },
       })
     );
   });
+
+  test('Lambda actions with capture', () => {
+    const lambdaActionsCapture = new Capture();
+
+    template.hasResourceProperties('AWS::IAM::Policy', {
+      PolicyDocument: {
+        Statement: [
+          {
+            Action: lambdaActionsCapture,
+          },
+        ],
+      },
+    });
+  });
 });
+
+//     template.hasResourceProperties('AWS::Lambda::Function', {
+//   Runtime: Match.stringLikeRegexp('nodejs'),
+// });
