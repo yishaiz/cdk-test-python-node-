@@ -4,7 +4,7 @@ import os
 import aws_cdk as cdk
 
 from py_testing.py_testing_stack import PySimpleStack
-
+from py_testing.policy_check import PolicyChecker
 
 app = cdk.App()
 my_stack = PySimpleStack(app, "PySimpleStack")
@@ -18,5 +18,6 @@ cdk.Tags.of(my_stack).add("storage", "main",
 cdk.Tags.of(my_stack).add("storage", "aux",
                           include_resource_types=["AWS::S3::Bucket"])
 
+cdk.Aspects.of(app).add(PolicyChecker())
 
 app.synth()
